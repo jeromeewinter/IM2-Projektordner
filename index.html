@@ -1,51 +1,25 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Met Art Suche</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artsee</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <header>
+        <h1>Artsee</h1>
 
-<h1>Kunstsuche 🎨</h1>
+    </header>
+    <main>
+        <h2>Main Content</h2>
+        <p>This is the main content of the page.</p>
 
-<input type="text" id="searchInput" placeholder="z.B. van Gogh">
-<button onclick="searchArt()">Suchen</button>
+    </main>
+    <footer>
+        <p>This is the footer of the page.</p>
 
-<div id="results"></div>
-
-<script>
-async function searchArt() {
-  const query = document.getElementById("searchInput").value;
-
-  // 1. Suche nach IDs
-  const searchRes = await fetch(
-    `https://collectionapi.metmuseum.org/public/collection/v1/search?q=${query}`
-  );
-  const searchData = await searchRes.json();
-
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
-
-  // nur erste 5 Ergebnisse laden
-  const ids = searchData.objectIDs.slice(0, 5);
-
-  for (let id of ids) {
-    const objRes = await fetch(
-      `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
-    );
-    const art = await objRes.json();
-
-    // HTML anzeigen
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <h3>${art.title}</h3>
-      <p>${art.artistDisplayName}</p>
-      <img src="${art.primaryImageSmall}" width="200"/>
-    `;
-    resultsDiv.appendChild(div);
-  }
-}
-</script>
-
+    </footer>
+    <script src="js/script.js" type="module"></script>
 </body>
 </html>
