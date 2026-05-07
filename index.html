@@ -1,25 +1,165 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artsee</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Artsee</h1>
-
+      <h1>Artsee</h1>
     </header>
+
     <main>
-        <h2>Main Content</h2>
-        <p>This is the main content of the page.</p>
-
+      <div class="search-container">
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search for artist or artwork"
+          id="search"
+          autocomplete="off"
+        />
+        <button class="search-btn" aria-label="Search">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+      </div>
+      <p class="result-count" id="count">54 results</p>
     </main>
-    <footer>
-        <p>This is the footer of the page.</p>
 
-    </footer>
-    <script src="js/script.js" type="module"></script>
-</body>
+    <ul class="artwork-list" id="artwork-list">
+      <li class="artwork-item">
+        <img
+          class="artwork-img"
+          src="https://upload.wikimedia.org/wikipedia/en/d/d9/Pablo_Picasso%2C_1910%2C_Girl_with_a_Mandolin_%28Fanny_Tellier%29%2C_oil_on_canvas%2C_100.3_x_73.6_cm%2C_Museum_of_Modern_Art_New_York..jpg"
+          alt="Kubistisches Gemälde von Picasso"
+        />
+        <div class="artwork-info">
+          <span class="artwork-artist">Pablo Picasso</span>
+          <h2 class="artwork-title">Lorem Ipsum</h2>
+          <span class="artwork-location">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+              />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            Louvre Paris
+          </span>
+        </div>
+        <button class="btn-learn">Learn more</button>
+      </li>
+
+      <li class="artwork-item">
+        <div class="artwork-img-placeholder">Kein Bild</div>
+        <div class="artwork-info">
+          <span class="artwork-artist">Andreas</span>
+          <h2 class="artwork-title">Still Life</h2>
+          <span class="artwork-location">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+              />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            Stiftung Beyeler Basel
+          </span>
+        </div>
+        <button class="btn-learn">Learn more</button>
+      </li>
+
+      <li class="artwork-item">
+        <div class="artwork-img-placeholder">Kein Bild</div>
+        <div class="artwork-info">
+          <span class="artwork-artist">Andreas</span>
+          <h2 class="artwork-title">Still Life</h2>
+          <span class="artwork-location">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+              />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            Stiftung Beyeler Basel
+          </span>
+        </div>
+        <button class="btn-learn">Learn more</button>
+      </li>
+
+      <li class="artwork-item">
+        <div class="artwork-img-placeholder">Kein Bild</div>
+        <div class="artwork-info">
+          <span class="artwork-artist">Andreas</span>
+          <h2 class="artwork-title">Still Life</h2>
+          <span class="artwork-location">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+              />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            Stiftung Beyeler Basel
+          </span>
+        </div>
+        <button class="btn-learn">Learn more</button>
+      </li>
+    </ul>
+
+    <nav class="pagination" aria-label="Seiten">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <span class="page-dots">…</span>
+      <button class="page-btn">28</button>
+    </nav>
+    <script src="/js/script.js" defer></script>
+  </body>
 </html>
