@@ -7,8 +7,16 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header>
-      <h1>Artsee</h1>
+    <header class="header">
+      <canvas class="logo" id="logo-lottie" width="300" height="300"></canvas>
+      <div class="favorite-button">
+        <img
+          src="/assets/favorite_symbol.svg"
+          class="favorite-symbol"
+          alt="Favorites"
+        />
+        <p class="favorite-text">Favorites</p>
+      </div>
     </header>
 
     <main>
@@ -160,6 +168,29 @@
       <span class="page-dots">…</span>
       <button class="page-btn">28</button>
     </nav>
-    <script src="/js/script.js" defer></script>
+
+    <footer class="footer">
+      <div class="footer-line"></div>
+
+      <div class="footer-content">
+        <div class="footer-heart">♥</div>
+
+        <p>Made with Love by Anselm and Jérôme</p>
+
+        <div class="footer-links">
+          <a href="#">Our Mission</a>
+          <a href="#">Support & FAQ</a>
+        </div>
+
+        <div class="footer-contact">
+          <p>Contact</p>
+          <p>Holzikofenweg 8</p>
+          <p>3007 Bern</p>
+          <p>Switzerland</p>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="/js/script.js"></script>
   </body>
 </html>

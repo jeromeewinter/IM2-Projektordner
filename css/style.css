@@ -63,6 +63,27 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  max-width: 200px;
+}
+
+.favorite-symbol{
+      transition: fill 0.3s ease;
+}
+
+.favorite-symbol:hover{
+border-color: var(--accent);
+  color: var(--surface);
+  background: var(--accent)
+}
+
 /* search bar */
 
 .search-container {
@@ -96,7 +117,7 @@ body {
   color: transparent;
 }
 
-/*mach, dass der placeholdertext beim mausklick verschwindet*/
+/*Placeholdertext verschwindet bei Mausklick*/
 .search-input:focus {
   border-color: #b4b2a9;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
@@ -153,6 +174,14 @@ body {
 }
 
 /* Image */
+.artwork-item {
+  transition: all 0.3s ease;
+}
+
+.artwork-item:hover{
+  background-color: var(--line);
+  cursor: pointer;
+}
 
 .artwork-img {
   width: 180px;
@@ -284,6 +313,64 @@ body {
   font-size: 14px;
   padding: 0 0.2rem;
   pointer-events: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Footer */
+
+body {
+  background: #f5f5f5;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer {
+  width: 95%;
+  margin: 40px auto;
+  padding: 40px;
+  background: #f5f5f5;
+}
+
+.footer-line {
+  width: 95%;
+  height: 2px;
+  background: #111;
+  margin-bottom: 20px;
+}
+
+.footer-content {
+  color: #222;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.footer-heart {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  margin: 30px 0;
+}
+
+.footer-links a {
+  display: block;
+  color: #222;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.footer-links a:hover {
+  opacity: 0.6;
+}
+
+.footer-contact p {
+  margin-bottom: 3px;
 }
 
 /* ── Responsive ── */
