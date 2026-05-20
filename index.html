@@ -8,7 +8,13 @@
   </head>
   <body>
     <header class="header">
-      <canvas class="logo" id="logo-lottie" width="300" height="300"></canvas>
+      <a class="logo-wrapper" id="logo-wrapper" href="/index.html">
+        <div
+          class="logo"
+          id="logo-lottie"
+          style="width: 200px; height: 200px"
+        ></div>
+      </a>
       <div class="favorite-button">
         <img
           src="/assets/favorite_symbol.svg"
@@ -20,168 +26,173 @@
     </header>
 
     <main>
-      <div class="search-container">
-        <input
-          class="search-input"
-          type="text"
-          placeholder="Search for artist or artwork"
-          id="search"
-          autocomplete="off"
-        />
-        <button class="search-btn" aria-label="Search">
+      <!-- Search row -->
+      <div class="search-row">
+        <div class="search-container">
+          <input
+            class="search-input"
+            type="text"
+            placeholder="Search for artist or artwork"
+            id="search"
+            autocomplete="off"
+          />
+          <button class="search-btn" aria-label="Search">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Filter toggle button -->
+        <button
+          class="filter-toggle-btn"
+          id="filter-toggle"
+          aria-expanded="false"
+          aria-controls="filter-panel"
+        >
           <svg
-            width="20"
-            height="20"
+            width="16"
+            height="16"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.5"
+            stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+            <line x1="11" y1="18" x2="13" y2="18" />
+          </svg>
+          Filters
+          <span class="filter-badge" hidden>0</span>
+          <svg
+            class="filter-chevron"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="transition: transform 0.25s ease"
+          >
+            <path d="m6 9 6 6 6-6" />
           </svg>
         </button>
       </div>
-      <p class="result-count" id="count">54 results</p>
+
+      <!-- Filter panel -->
+      <div
+        class="filter-panel"
+        id="filter-panel"
+        role="region"
+        aria-label="Search filters"
+      >
+        <div class="filter-grid">
+          <!-- Department -->
+          <div class="filter-field">
+            <label class="filter-label" for="filter-department"
+              >Department</label
+            >
+            <div class="select-wrapper">
+              <select class="filter-select" id="filter-department">
+                <!-- populated by JS -->
+              </select>
+              <svg
+                class="select-arrow"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Date range -->
+          <div class="filter-field">
+            <label class="filter-label">Year range</label>
+            <div class="date-range">
+              <input
+                class="filter-input"
+                type="number"
+                id="filter-date-from"
+                placeholder="From (e.g. 1800)"
+                min="-3000"
+                max="2025"
+              />
+              <span class="date-range-sep">–</span>
+              <input
+                class="filter-input"
+                type="number"
+                id="filter-date-to"
+                placeholder="To (e.g. 1900)"
+                min="-3000"
+                max="2025"
+              />
+            </div>
+          </div>
+
+          <!-- Medium -->
+          <div class="filter-field">
+            <label class="filter-label" for="filter-medium"
+              >Medium / Material</label
+            >
+            <input
+              class="filter-input"
+              type="text"
+              id="filter-medium"
+              placeholder="e.g. Oil on canvas"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="filter-actions">
+          <button class="filter-reset-btn" id="filter-reset">Reset</button>
+          <button class="filter-apply-btn" id="filter-apply">
+            Apply filters
+          </button>
+        </div>
+      </div>
+
+      <!-- Active filter tags -->
+      <div class="active-filters" id="active-filters"></div>
+
+      <p class="result-count" id="count">Loading…</p>
     </main>
 
-    <ul class="artwork-list" id="artwork-list">
-      <li class="artwork-item">
-        <img
-          class="artwork-img"
-          src="https://upload.wikimedia.org/wikipedia/en/d/d9/Pablo_Picasso%2C_1910%2C_Girl_with_a_Mandolin_%28Fanny_Tellier%29%2C_oil_on_canvas%2C_100.3_x_73.6_cm%2C_Museum_of_Modern_Art_New_York..jpg"
-          alt="Kubistisches Gemälde von Picasso"
-        />
-        <div class="artwork-info">
-          <span class="artwork-artist">Pablo Picasso</span>
-          <h2 class="artwork-title">Lorem Ipsum</h2>
-          <span class="artwork-location">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              />
-              <circle cx="12" cy="9" r="2.5" />
-            </svg>
-            Louvre Paris
-          </span>
-        </div>
-        <button class="btn-learn">Learn more</button>
-      </li>
+    <ul class="artwork-list" id="artwork-list"></ul>
 
-      <li class="artwork-item">
-        <div class="artwork-img-placeholder">Kein Bild</div>
-        <div class="artwork-info">
-          <span class="artwork-artist">Andreas</span>
-          <h2 class="artwork-title">Still Life</h2>
-          <span class="artwork-location">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              />
-              <circle cx="12" cy="9" r="2.5" />
-            </svg>
-            Stiftung Beyeler Basel
-          </span>
-        </div>
-        <button class="btn-learn">Learn more</button>
-      </li>
-
-      <li class="artwork-item">
-        <div class="artwork-img-placeholder">Kein Bild</div>
-        <div class="artwork-info">
-          <span class="artwork-artist">Andreas</span>
-          <h2 class="artwork-title">Still Life</h2>
-          <span class="artwork-location">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              />
-              <circle cx="12" cy="9" r="2.5" />
-            </svg>
-            Stiftung Beyeler Basel
-          </span>
-        </div>
-        <button class="btn-learn">Learn more</button>
-      </li>
-
-      <li class="artwork-item">
-        <div class="artwork-img-placeholder">Kein Bild</div>
-        <div class="artwork-info">
-          <span class="artwork-artist">Andreas</span>
-          <h2 class="artwork-title">Still Life</h2>
-          <span class="artwork-location">
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-              />
-              <circle cx="12" cy="9" r="2.5" />
-            </svg>
-            Stiftung Beyeler Basel
-          </span>
-        </div>
-        <button class="btn-learn">Learn more</button>
-      </li>
-    </ul>
-
-    <nav class="pagination" aria-label="Seiten">
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <span class="page-dots">…</span>
-      <button class="page-btn">28</button>
-    </nav>
+    <nav class="pagination" aria-label="Pages"></nav>
 
     <footer class="footer">
       <div class="footer-line"></div>
-
       <div class="footer-content">
         <div class="footer-heart">♥</div>
-
         <p>Made with Love by Anselm and Jérôme</p>
-
         <div class="footer-links">
-          <a href="#">Our Mission</a>
-          <a href="#">Support & FAQ</a>
+          <a href="/mission.html">Our Mission</a>
+          <a href="/support.html">Support & FAQ</a>
         </div>
-
         <div class="footer-contact">
           <p>Contact</p>
           <p>Holzikofenweg 8</p>
@@ -191,6 +202,7 @@
       </div>
     </footer>
 
-    <script type="module" src="/js/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="/js/script.js"></script>
   </body>
 </html>
