@@ -1,15 +1,15 @@
 // ── Lottie Logo ───────────────────────────────────────────────────
-const animation = lottie.loadAnimation({
-  container: document.getElementById("logo-lottie"),
-  renderer: "svg",
-  loop: false,
-  autoplay: true,
-  path: "/assets/logo.json",
-});
-
-document.getElementById("logo-lottie").addEventListener("mouseenter", () => {
-  animation.goToAndPlay(0);
-});
+const logoEl = document.getElementById("logo-lottie");
+if (typeof lottie !== "undefined" && logoEl) {
+  const animation = lottie.loadAnimation({
+    container: logoEl,
+    renderer: "svg",
+    loop: false,
+    autoplay: true,
+    path: "/assets/logo.json",
+  });
+  logoEl.addEventListener("mouseenter", () => animation.goToAndPlay(0));
+}
 
 // ── Accordion (läuft auf allen Seiten) ────────────────────────────
 document.querySelectorAll(".accordion").forEach(btn => {
