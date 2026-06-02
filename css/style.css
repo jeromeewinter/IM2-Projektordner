@@ -379,7 +379,6 @@ body {
 }
 
 /* ── Filter system ── */
-/* Add these styles to your existing style.css */
 
 /* Search row (search + filter toggle side by side) */
 .search-row {
@@ -734,7 +733,7 @@ body {
   }
 }
 
-/* ── Lightbox ── (ans Ende von style.css anfügen) ────────────────── */
+/* ── Lightbox ────────────────── */
 
 .lightbox {
   display: none;
@@ -918,7 +917,7 @@ body {
   }
 }
 
-/* ── Mobile Layout (ans Ende von style.css anfügen) ─────────────── */
+/* ── Mobile Layout ─────────────── */
 
 @media (max-width: 768px) {
 
