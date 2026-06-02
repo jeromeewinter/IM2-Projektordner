@@ -1,15 +1,15 @@
 // ── Lottie Logo ───────────────────────────────────────────────────
-const logoEl = document.getElementById("logo-lottie");
-if (typeof lottie !== "undefined" && logoEl) {
-  const animation = lottie.loadAnimation({
-    container: logoEl,
-    renderer: "svg",
-    loop: false,
-    autoplay: true,
-    path: "/assets/logo.json",
-  });
-  logoEl.addEventListener("mouseenter", () => animation.goToAndPlay(0));
-}
+const animation = lottie.loadAnimation({
+  container: document.getElementById("logo-lottie"),
+  renderer: "svg",
+  loop: false,
+  autoplay: true,
+  path: "/assets/logo.json",
+});
+
+document.getElementById("logo-lottie").addEventListener("mouseenter", () => {
+  animation.goToAndPlay(0);
+});
 
 // ── Accordion (läuft auf allen Seiten) ────────────────────────────
 document.querySelectorAll(".accordion").forEach(btn => {
@@ -93,6 +93,13 @@ if (document.getElementById("artwork-list")) {
   });
 
   let favorites = JSON.parse(localStorage.getItem("aic-favorites") || "[]");
+  let showOnlyFavorites = false;
+
+    document.getElementById("favorites-button").addEventListener("click", () => {
+  showOnlyFavorites = !showOnlyFavorites;
+  document.getElementById("favorites-button").classList.toggle("active", showOnlyFavorites);
+  triggerSearch();
+});
 
   // ── Filter-Werte auslesen ────────────────────────────────────────
   function getFilters() {
@@ -137,56 +144,53 @@ if (document.getElementById("artwork-list")) {
     });
   }
 
-  // ── Such-Request bauen (POST mit JSON-Body für zuverlässiges AND) ─
-  function buildSearch(query, filters, page) {
+  // ── Such-URL bauen ───────────────────────────────────────────────
+  function buildSearchUrl(query, filters, page) {
     const url = new URL(`${BASE}/artworks/search`);
     url.searchParams.set("fields", FIELDS);
     url.searchParams.set("limit",  PER_PAGE);
     url.searchParams.set("page",   page);
+    url.searchParams.set("q", query || "*");
 
-    const boolQuery = { bool: {} };
+    let i = 0;
 
-    if (query.trim()) {
-      boolQuery.bool.must = {
-        multi_match: {
-          query:   query.trim(),
-          type:    "phrase",
-          fields:  ["title^3", "artist_display^2"],
-          lenient: true,
-        }
-      };
-    } else {
-      boolQuery.bool.must = { match_all: {} };
-    }
-
-    const filterClauses = [];
     if (filters.department) {
-      filterClauses.push({ term: { "department_title.keyword": filters.department } });
+      url.searchParams.set(
+        `query[bool][filter][${i}][term][department_title.keyword]`,
+        filters.department
+      );
+      i++;
     }
     if (filters.dateFrom) {
-      filterClauses.push({ range: { date_start: { gte: parseInt(filters.dateFrom) } } });
+      url.searchParams.set(
+        `query[bool][filter][${i}][range][date_start][gte]`,
+        filters.dateFrom
+      );
+      i++;
     }
     if (filters.dateTo) {
-      filterClauses.push({ range: { date_end: { lte: parseInt(filters.dateTo) } } });
+      url.searchParams.set(
+        `query[bool][filter][${i}][range][date_end][lte]`,
+        filters.dateTo
+      );
+      i++;
     }
     if (filters.medium) {
-      filterClauses.push({ match: { medium_display: filters.medium } });
-    }
-    if (filterClauses.length) {
-      boolQuery.bool.filter = filterClauses;
+      url.searchParams.set(
+        `query[bool][filter][${i}][match][medium_display]`,
+        filters.medium
+      );
+      i++;
     }
 
-    return {
-      url:  url.toString(),
-      body: JSON.stringify({ query: boolQuery }),
-    };
+    return url.toString();
   }
 
   // ── Suche ausführen ──────────────────────────────────────────────
-  async function search(query, page = 1) {
+async function search(query, page = 1) {
     currentQuery = query.trim();
     currentPage  = page;
-    listEl.innerHTML    = "";
+    listEl.innerHTML = "";
     countEl.textContent = "Searching…";
 
     const filters = getFilters();
@@ -202,12 +206,8 @@ if (document.getElementById("artwork-list")) {
     badge.hidden = activeCount === 0;
 
     try {
-      const { url, body } = buildSearch(currentQuery, filters, currentPage);
-      const res = await fetch(url, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
+      const url = buildSearchUrl(currentQuery, filters, currentPage);
+      const res  = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -219,11 +219,14 @@ if (document.getElementById("artwork-list")) {
 
       countEl.textContent = `${total.toLocaleString("de-CH")} results`;
 
-      listEl.innerHTML = "";
-      if (artworks.length === 0) {
+      const displayed = showOnlyFavorites
+        ? artworks.filter(a => favorites.includes(a.id))
+        : artworks;
+
+      if (displayed.length === 0) {
         listEl.innerHTML = '<li style="padding:2rem;color:var(--muted)">No results found.</li>';
       } else {
-        for (const art of artworks) {
+        for (const art of displayed) {
           listEl.appendChild(buildItem(art));
         }
       }
@@ -232,10 +235,7 @@ if (document.getElementById("artwork-list")) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
     } catch (err) {
-      totalPages = 1;
       countEl.textContent = "Error loading results. Please try again.";
-      paginationEl.innerHTML = "";
-      listEl.innerHTML = '<li style="padding:2rem;color:var(--muted)">Something went wrong. Please try again.</li>';
       console.error("AIC API error:", err);
     }
   }
@@ -253,8 +253,7 @@ if (document.getElementById("artwork-list")) {
       ? `<img class="artwork-img"
               src="${IIIF}/${art.image_id}/full/400,/0/default.jpg"
               alt="${escHtml(art.title)}"
-              loading="lazy"
-              onerror="this.outerHTML='<div class=\\"artwork-img-placeholder\\">No image</div>'" />`
+              loading="lazy" />`
       : `<div class="artwork-img-placeholder">No image</div>`;
 
     const locationParts = [art.department_title, art.place_of_origin].filter(Boolean);
@@ -273,24 +272,26 @@ if (document.getElementById("artwork-list")) {
       : "Unknown Artist";
     const date = art.date_display ? ` · ${art.date_display}` : "";
 
-    li.innerHTML = `
-      ${imgHtml}
-      <div class="artwork-info">
-        <span class="artwork-artist">${escHtml(artist)}${escHtml(date)}</span>
-        <span class="artwork-title">${escHtml(art.title || "Untitled")}</span>
-        ${locationStr}
-      </div>
-<button class="btn-favorite${favorites.includes(art.id) ? " active" : ""}" 
-  aria-label="Zu Favoriten hinzufügen" 
-  data-id="${art.id}">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-</button>
-<button class="btn-learn" aria-label="More about ${escHtml(art.title || "this artwork")}">
-  More →
-</button>
-    `;
+li.innerHTML = `
+  ${imgHtml}
+  <div class="artwork-info">
+    <span class="artwork-artist">${escHtml(artist)}${escHtml(date)}</span>
+    <span class="artwork-title">${escHtml(art.title || "Untitled")}</span>
+    ${locationStr}
+  </div>
+  <div class="artwork-actions">
+    <button class="btn-favorite${favorites.includes(art.id) ? " active" : ""}" 
+      aria-label="Zu Favoriten hinzufügen" 
+      data-id="${art.id}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+    </button>
+    <button class="btn-learn" aria-label="More about ${escHtml(art.title || "this artwork")}">
+      More →
+    </button>
+  </div>
+`;
 
     li.querySelector(".btn-learn").addEventListener("click", (e) => {
       e.stopPropagation();
