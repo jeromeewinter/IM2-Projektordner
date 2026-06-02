@@ -184,6 +184,63 @@
 
     <nav class="pagination" aria-label="Pages"></nav>
 
+    <!-- ── Lightbox ── -->
+    <div
+      class="lightbox"
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Artwork detail"
+    >
+      <div class="lightbox-box">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+        <div class="lightbox-inner">
+          <div class="lightbox-img-col">
+            <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+          </div>
+          <div class="lightbox-info">
+            <span class="lightbox-source">Art Institute of Chicago</span>
+            <h2 class="lightbox-title" id="lightbox-title"></h2>
+            <div class="lightbox-meta" id="lightbox-meta"></div>
+            <a
+              class="lightbox-link"
+              id="lightbox-link"
+              href=""
+              target="_blank"
+              rel="noopener"
+            >
+              View on artic.edu
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M7 7h10v10M7 17 17 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <footer class="footer">
       <div class="footer-line"></div>
       <div class="footer-content">
