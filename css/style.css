@@ -256,6 +256,9 @@ body {
 }
 
 /* ── Filter system ── */
+/* Add these styles to your existing style.css */
+
+/* Search row (search + filter toggle side by side) */
 .search-row {
   display: flex; align-items: center; gap: 0.75rem;
   max-width: 560px; margin: 0 auto;
@@ -407,7 +410,8 @@ body {
 }
 .filter-tag:hover { background: rgba(192,74,42,0.15); }
 
-/* ── Lightbox ── */
+/* ── Lightbox ── (ans Ende von style.css anfügen) ────────────────── */
+
 .lightbox {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.80);
@@ -513,74 +517,36 @@ body {
   font-family: "Host Grotesk", system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
-  text-align: left;
-  transition: color 0.2s;
-}
-.accordion:first-of-type { border-top: 1px solid var(--line); }
-.accordion:hover { color: var(--muted); }
-
-.accordion-icon {
-  width: 18px; height: 18px;
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-.accordion.active .accordion-icon { transform: rotate(45deg); }
-
-.panel {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-}
-.panel p {
-  padding: 1rem 0 1.5rem;
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.7;
+  z-index: 10;
+  transition: color 0.15s, border-color 0.15s;
 }
 
-.btn-favorite {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  color: var(--muted);
-  border-radius: 6px;
-  transition: color 0.15s, background 0.15s;
-  flex-shrink: 0;
+.lightbox-close:hover {
+  color: var(--text, #111);
+  border-color: var(--text, #111);
 }
 
-.btn-favorite:hover {
-  color: var(--text);
-  background: var(--line);
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .lightbox-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .lightbox-img-col {
+    min-height: 220px;
+    border-radius: var(--radius, 6px) var(--radius, 6px) 0 0;
+    padding: 1.25rem;
+  }
+
+  .lightbox-info {
+    padding: 1.5rem 1.25rem;
+    border-left: none;
+    border-top: 1px solid var(--line, #e5e7eb);
+  }
 }
 
-.btn-favorite.active svg {
-  fill: gold;
-  stroke: goldenrod;
-}
+/* ── Mobile Layout (ans Ende von style.css anfügen) ─────────────── */
 
-/* ── Footer ── */
-.footer {
-  width: 95%; margin: 40px auto; padding: 40px;
-}
-.footer-line {
-  width: 95%; height: 2px;
-  background: var(--text); margin-bottom: 20px;
-}
-.footer-content { font-size: 18px; line-height: 1.5; }
-.footer-heart { font-size: 20px; margin-bottom: 20px; }
-.footer-links { margin: 30px 0; }
-.footer-links a {
-  display: block; color: var(--text);
-  text-decoration: none; margin-bottom: 8px;
-  transition: opacity 0.2s ease;
-}
-.footer-links a:hover { opacity: 0.6; }
-.footer-contact p { margin-bottom: 3px; }
-
-/* ── Mobile ── */
 @media (max-width: 768px) {
   .header { padding: 0.75rem 1rem; }
   .search-row { padding: 0 1rem; max-width: 100%; }
