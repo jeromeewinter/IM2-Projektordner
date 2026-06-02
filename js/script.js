@@ -137,50 +137,49 @@ if (document.getElementById("artwork-list")) {
     });
   }
 
-  // ── Such-URL bauen ───────────────────────────────────────────────
-  function buildSearchUrl(query, filters, page) {
+  // ── Such-Request bauen (POST mit JSON-Body für zuverlässiges AND) ─
+  function buildSearch(query, filters, page) {
     const url = new URL(`${BASE}/artworks/search`);
     url.searchParams.set("fields", FIELDS);
     url.searchParams.set("limit",  PER_PAGE);
     url.searchParams.set("page",   page);
-    // Require all words (AND instead of OR) so "van gogh" doesn't match every Dutch artwork
-    const q = query
-      ? query.trim().split(/\s+/).map(w => `+${w}`).join(" ")
-      : "*";
-    url.searchParams.set("q", q);
 
-    let i = 0;
+    const boolQuery = { bool: {} };
 
+    if (query.trim()) {
+      boolQuery.bool.must = {
+        multi_match: {
+          query:   query.trim(),
+          type:    "phrase",
+          fields:  ["title^3", "artist_display^2"],
+          lenient: true,
+        }
+      };
+    } else {
+      boolQuery.bool.must = { match_all: {} };
+    }
+
+    const filterClauses = [];
     if (filters.department) {
-      url.searchParams.set(
-        `query[bool][filter][${i}][term][department_title.keyword]`,
-        filters.department
-      );
-      i++;
+      filterClauses.push({ term: { "department_title.keyword": filters.department } });
     }
     if (filters.dateFrom) {
-      url.searchParams.set(
-        `query[bool][filter][${i}][range][date_start][gte]`,
-        filters.dateFrom
-      );
-      i++;
+      filterClauses.push({ range: { date_start: { gte: parseInt(filters.dateFrom) } } });
     }
     if (filters.dateTo) {
-      url.searchParams.set(
-        `query[bool][filter][${i}][range][date_end][lte]`,
-        filters.dateTo
-      );
-      i++;
+      filterClauses.push({ range: { date_end: { lte: parseInt(filters.dateTo) } } });
     }
     if (filters.medium) {
-      url.searchParams.set(
-        `query[bool][filter][${i}][match][medium_display]`,
-        filters.medium
-      );
-      i++;
+      filterClauses.push({ match: { medium_display: filters.medium } });
+    }
+    if (filterClauses.length) {
+      boolQuery.bool.filter = filterClauses;
     }
 
-    return url.toString();
+    return {
+      url:  url.toString(),
+      body: JSON.stringify({ query: boolQuery }),
+    };
   }
 
   // ── Suche ausführen ──────────────────────────────────────────────
@@ -203,8 +202,12 @@ if (document.getElementById("artwork-list")) {
     badge.hidden = activeCount === 0;
 
     try {
-      const url = buildSearchUrl(currentQuery, filters, currentPage);
-      const res  = await fetch(url);
+      const { url, body } = buildSearch(currentQuery, filters, currentPage);
+      const res = await fetch(url, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -229,7 +232,10 @@ if (document.getElementById("artwork-list")) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
     } catch (err) {
+      totalPages = 1;
       countEl.textContent = "Error loading results. Please try again.";
+      paginationEl.innerHTML = "";
+      listEl.innerHTML = '<li style="padding:2rem;color:var(--muted)">Something went wrong. Please try again.</li>';
       console.error("AIC API error:", err);
     }
   }
