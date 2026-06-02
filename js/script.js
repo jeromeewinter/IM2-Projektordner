@@ -1,9 +1,14 @@
+// ── Lottie Logo ───────────────────────────────────────────────────
 const animation = lottie.loadAnimation({
   container: document.getElementById("logo-lottie"),
   renderer: "svg",
   loop: false,
   autoplay: true,
   path: "/assets/logo.json",
+});
+
+document.getElementById("logo-lottie").addEventListener("mouseenter", () => {
+  animation.goToAndPlay(0);
 });
 
 // ── Art Institute of Chicago API ────────────────────────────────
@@ -14,24 +19,29 @@ const FIELDS =
   "id,title,artist_display,date_display,image_id,department_title,place_of_origin,medium_display,artwork_type_title,dimensions,credit_line";
 
 // AIC Department / category labels (used for filter dropdown)
+// Echte Department-Namen aus der AIC-API (category-terms, subtype: department)
 const DEPARTMENTS = [
   { id: "", label: "All Departments" },
+  { id: "American Art", label: "American Art" },
+  { id: "Ancient and Byzantine Art", label: "Ancient and Byzantine Art" },
   { id: "Applied Arts of Europe", label: "Applied Arts of Europe" },
   { id: "Architecture and Design", label: "Architecture and Design" },
   { id: "Arts of Africa", label: "Arts of Africa" },
-  { id: "Arts of the Americas", label: "Arts of the Americas" },
-  { id: "Arts of Asia", label: "Arts of Asia" },
-  { id: "Decorative Arts", label: "Decorative Arts" },
-  { id: "Drawing and Printmaking", label: "Drawing and Printmaking" },
   {
-    id: "European Painting and Sculpture",
-    label: "European Painting and Sculpture",
+    id: "Arts of Ancient Egypt, Nubia, and the Near East",
+    label: "Arts of Ancient Egypt & Near East",
   },
+  { id: "Arts of the Americas", label: "Arts of the Americas" },
+  {
+    id: "Arts of Asia and the Pacific Islands",
+    label: "Arts of Asia and the Pacific",
+  },
+  { id: "European Decorative Arts", label: "European Decorative Arts" },
   {
     id: "Medieval to Modern European Painting and Sculpture",
-    label: "Medieval to Modern European Painting",
+    label: "European Painting & Sculpture",
   },
-  { id: "Modern Art", label: "Modern Art" },
+  { id: "Modern and Contemporary Art", label: "Modern and Contemporary Art" },
   { id: "Photography and Media", label: "Photography and Media" },
   { id: "Prints and Drawings", label: "Prints and Drawings" },
   { id: "Textiles", label: "Textiles" },
@@ -148,7 +158,7 @@ function buildSearchUrl(query, filters, page) {
   }
 
   if (filters.department) {
-    params.set("query[term][department_title.keyword]", filters.department);
+    params.set("query[match][department_title]", filters.department);
   }
 
   if (filters.dateFrom) {
