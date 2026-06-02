@@ -143,7 +143,11 @@ if (document.getElementById("artwork-list")) {
     url.searchParams.set("fields", FIELDS);
     url.searchParams.set("limit",  PER_PAGE);
     url.searchParams.set("page",   page);
-    url.searchParams.set("q", query || "*");
+    // Require all words (AND instead of OR) so "van gogh" doesn't match every Dutch artwork
+    const q = query
+      ? query.trim().split(/\s+/).map(w => `+${w}`).join(" ")
+      : "*";
+    url.searchParams.set("q", q);
 
     let i = 0;
 
@@ -243,7 +247,8 @@ if (document.getElementById("artwork-list")) {
       ? `<img class="artwork-img"
               src="${IIIF}/${art.image_id}/full/400,/0/default.jpg"
               alt="${escHtml(art.title)}"
-              loading="lazy" />`
+              loading="lazy"
+              onerror="this.outerHTML='<div class=\\"artwork-img-placeholder\\">No image</div>'" />`
       : `<div class="artwork-img-placeholder">No image</div>`;
 
     const locationParts = [art.department_title, art.place_of_origin].filter(Boolean);
