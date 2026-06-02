@@ -11,7 +11,7 @@ const BASE = "https://api.artic.edu/api/v1";
 const IIIF = "https://www.artic.edu/iiif/2";
 const PER_PAGE = 10;
 const FIELDS =
-  "id,title,artist_display,date_display,image_id,department_title,place_of_origin,medium_display,artwork_type_title";
+  "id,title,artist_display,date_display,image_id,department_title,place_of_origin,medium_display,artwork_type_title,dimensions,credit_line";
 
 // AIC Department / category labels (used for filter dropdown)
 const DEPARTMENTS = [
@@ -269,15 +269,93 @@ function buildItem(art) {
     </button>
   `;
 
-  const url = `https://www.artic.edu/artworks/${art.id}`;
+  // "More →" öffnet Lightbox (nicht externe Seite)
   li.querySelector(".btn-learn").addEventListener("click", (e) => {
     e.stopPropagation();
-    window.open(url, "_blank", "noopener");
+    openLightbox(art);
   });
-  li.addEventListener("click", () => window.open(url, "_blank", "noopener"));
+
+  // Klick auf die ganze Zeile öffnet ebenfalls Lightbox
+  li.addEventListener("click", () => openLightbox(art));
 
   return li;
 }
+
+// ── Lightbox ──────────────────────────────────────────────────────
+const lightboxEl = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const lightboxTitle = document.getElementById("lightbox-title");
+const lightboxMeta = document.getElementById("lightbox-meta");
+const lightboxLink = document.getElementById("lightbox-link");
+const lightboxClose = document.getElementById("lightbox-close");
+
+function openLightbox(art) {
+  // Bild (grosse Version für Lightbox)
+  if (art.image_id) {
+    lightboxImg.src = `${IIIF}/${art.image_id}/full/843,/0/default.jpg`;
+    lightboxImg.alt = art.title || "";
+    lightboxImg.style.display = "block";
+  } else {
+    lightboxImg.style.display = "none";
+  }
+
+  // Titel
+  lightboxTitle.textContent = art.title || "Untitled";
+
+  // Meta-Felder — nur anzeigen wenn vorhanden
+  const fields = [
+    {
+      label: "Artist",
+      value: art.artist_display ? art.artist_display.split("\n")[0] : null,
+    },
+    { label: "Date", value: art.date_display },
+    { label: "Medium", value: art.medium_display },
+    { label: "Dimensions", value: art.dimensions },
+    { label: "Department", value: art.department_title },
+    { label: "Origin", value: art.place_of_origin },
+    { label: "Credit", value: art.credit_line },
+  ];
+
+  lightboxMeta.innerHTML = fields
+    .filter((f) => f.value)
+    .map(
+      (f) => `
+      <div class="lightbox-meta-row">
+        <span class="lightbox-meta-label">${f.label}</span>
+        <span class="lightbox-meta-value">${escHtml(f.value)}</span>
+      </div>`,
+    )
+    .join("");
+
+  // Link zur AIC-Seite
+  lightboxLink.href = `https://www.artic.edu/artworks/${art.id}`;
+
+  // Öffnen
+  lightboxEl.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  lightboxEl.classList.remove("open");
+  document.body.style.overflow = "";
+  // Bild zurücksetzen damit kein altes Bild kurz aufflackert
+  setTimeout(() => {
+    lightboxImg.src = "";
+  }, 300);
+}
+
+// Close-Button
+lightboxClose.addEventListener("click", closeLightbox);
+
+// Klick auf Overlay (ausserhalb der Box) schliesst
+lightboxEl.addEventListener("click", (e) => {
+  if (e.target === lightboxEl) closeLightbox();
+});
+
+// ESC-Taste
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeLightbox();
+});
 
 // ── Pagination ────────────────────────────────────────────────────
 function renderPagination() {
