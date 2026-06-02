@@ -67,17 +67,22 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.logo-wrapper {
- height: 150px;
+  overflow: visible;
+  padding: 0px 40px;
 }
 
 .logo {
-  width: 350px;
-  height: 350px;
-  margin-top: -100px;
-  margin-bottom: -100px;
+  pointer-events: none;
+  height: 200px;
+}
+
+.logo-hitbox {
+  position: absolute;
+  left: 66px;
+  top: 72px;
+  height: 100px;
+  width: 200px;
+  z-index: 10;
 }
 
 .favorite-symbol{
@@ -319,12 +324,6 @@ border-color: var(--accent);
   font-size: 14px;
   padding: 0 0.2rem;
   pointer-events: none;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 /* Footer */

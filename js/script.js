@@ -1,14 +1,9 @@
-// ── Lottie Logo ───────────────────────────────────────────────────
 const animation = lottie.loadAnimation({
   container: document.getElementById("logo-lottie"),
   renderer: "svg",
   loop: false,
   autoplay: true,
   path: "/assets/logo.json",
-});
-
-document.getElementById("logo-lottie").addEventListener("mouseenter", () => {
-  animation.goToAndPlay(0);
 });
 
 // ── Art Institute of Chicago API ────────────────────────────────
