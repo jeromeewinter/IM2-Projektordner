@@ -38,22 +38,21 @@ if (document.getElementById("artwork-list")) {
   const PER_PAGE = 10;
   const FIELDS   = "id,title,artist_display,date_display,image_id,department_title,place_of_origin,medium_display,artwork_type_title,dimensions,credit_line";
 
- const DEPARTMENTS = [
-  { id: "",                                          label: "All Departments" },
-  { id: "Applied Arts of Europe",                    label: "European Decorative Art" },
-  { id: "Arts of the Americas",                      label: "Arts of the Americas" },
-  { id: "Arts of Africa",                            label: "Arts of Africa" },
-  { id: "Asian and Ancient Mediterranean Art",       label: "Asian Art" },
-  { id: "Ancient and Byzantine Art",                 label: "Ancient and Byzantine Art" },
-  { id: "Architecture and Design",                   label: "Architecture and Design" },
-  { id: "Arms and Armor",                            label: "Arms and Armor" },
-  { id: "American Art",                              label: "American Art" },
-  { id: "Contemporary Art",                          label: "Contemporary Art" },
-  { id: "Painting and Sculpture of Europe",          label: "European Painting and Sculpture" },
-  { id: "Photography and Media",                     label: "Photography" },
-  { id: "Prints and Drawings",                       label: "Prints and Drawings" },
-  { id: "Textiles",                                  label: "Textiles" },
+const DEPARTMENTS = [
+  { id: [],                                                    label: "All Departments" },
+  { id: ["Applied Arts of Europe"],                            label: "European Decorative Art" },
+  { id: ["Arts of Africa"],                                    label: "African Art" },
+  { id: ["Arts of Asia"],                                      label: "Asian Art" },
+  { id: ["Arts of Greece, Rome, and Byzantium"],               label: "Ancient and Byzantine Art" },
+  { id: ["Arts of the Americas"],                              label: "American Art" },
+  { id: ["Contemporary Art"],                                  label: "Contemporary Art" },
+  { id: ["Modern Art"],                                        label: "Modern Art" },
+  { id: ["Painting and Sculpture of Europe"],                  label: "European Painting and Sculpture" },
+  { id: ["Photography and Media"],                             label: "Photography" },
+  { id: ["Prints and Drawings"],                               label: "Prints and Drawings" },
+  { id: ["Textiles"],                                          label: "Textiles" },
 ];
+
 
   // ── State ────────────────────────────────────────────────────────
   let currentPage  = 1;
@@ -99,6 +98,17 @@ if (document.getElementById("artwork-list")) {
   showOnlyFavorites = !showOnlyFavorites;
   document.getElementById("favorites-button").classList.toggle("active", showOnlyFavorites);
   triggerSearch();
+});
+
+document.getElementById("view-list").addEventListener("click", () => {
+  listEl.classList.remove("grid-view");
+  document.getElementById("view-list").classList.add("active");
+  document.getElementById("view-grid").classList.remove("active");
+});
+document.getElementById("view-grid").addEventListener("click", () => {
+  listEl.classList.add("grid-view");
+  document.getElementById("view-grid").classList.add("active");
+  document.getElementById("view-list").classList.remove("active");
 });
 
   // ── Filter-Werte auslesen ────────────────────────────────────────
@@ -213,11 +223,16 @@ async function search(query, page = 1) {
 
       const artworks   = data.data       ?? [];
       const pagination = data.pagination ?? {};
+const cappedPages = Math.min(pagination.total_pages ?? 1, 100);
+totalPages = cappedPages;
+const total = pagination.total ?? artworks.length;
 
-      totalPages = pagination.total_pages ?? 1;
-      const total = pagination.total ?? artworks.length;
-
-      countEl.textContent = `${total.toLocaleString("de-CH")} results`;
+countEl.textContent = currentQuery
+  ? `Results for "${currentQuery}"`
+  : `${total.toLocaleString("de-CH")} artworks`;
+  if (showOnlyFavorites) {
+  countEl.textContent = `${favorites.length} favorite${favorites.length !== 1 ? "s" : ""}`;
+}
 
       const displayed = showOnlyFavorites
         ? artworks.filter(a => favorites.includes(a.id))
@@ -233,6 +248,13 @@ async function search(query, page = 1) {
 
       renderPagination();
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (pagination.total_pages > 1000) {
+  const note = document.createElement("span");
+  note.className = "page-dots";
+  note.textContent = "· refine your search for more";
+  paginationEl.appendChild(note);
+}
 
     } catch (err) {
       countEl.textContent = "Error loading results. Please try again.";
@@ -253,7 +275,7 @@ async function search(query, page = 1) {
       ? `<img class="artwork-img"
               src="${IIIF}/${art.image_id}/full/400,/0/default.jpg"
               alt="${escHtml(art.title)}"
-              loading="lazy" />`
+              loading="eager" />`
       : `<div class="artwork-img-placeholder">No image</div>`;
 
     const locationParts = [art.department_title, art.place_of_origin].filter(Boolean);
@@ -293,13 +315,7 @@ li.innerHTML = `
   </div>
 `;
 
-    li.querySelector(".btn-learn").addEventListener("click", (e) => {
-      e.stopPropagation();
-      openLightbox(art);
-    });
-    li.addEventListener("click", () => openLightbox(art));
-
-    li.querySelector(".btn-favorite").addEventListener("click", (e) => {
+li.querySelector(".btn-favorite").addEventListener("click", (e) => {
   e.stopPropagation();
   const id = art.id;
   const idx = favorites.indexOf(id);
@@ -309,9 +325,19 @@ li.innerHTML = `
   } else {
     favorites.splice(idx, 1);
     e.currentTarget.classList.remove("active");
+    if (showOnlyFavorites) {
+      li.remove();
+      countEl.textContent = `${favorites.length} favorites`;
+    }
   }
   localStorage.setItem("aic-favorites", JSON.stringify(favorites));
 });
+
+li.querySelector(".btn-learn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  openLightbox(art);
+});
+li.addEventListener("click", () => openLightbox(art));
 
     return li;
   }
@@ -326,7 +352,7 @@ li.innerHTML = `
 
   function openLightbox(art) {
     if (art.image_id) {
-      lightboxImg.src           = `${IIIF}/${art.image_id}/full/843,/0/default.jpg`;
+      lightboxImg.src           = `${IIIF}/${art.image_id}/full/!400,400/0/default.jpg`
       lightboxImg.alt           = art.title || "";
       lightboxImg.style.display = "block";
     } else {
@@ -426,8 +452,11 @@ li.innerHTML = `
     triggerSearch();
   });
 
-  // ── Init ─────────────────────────────────────────────────────────
-  search("");
+// ── Init ─────────────────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const initQuery = params.get("q") || "";
+if (initQuery) searchInput.value = initQuery;
+search(initQuery);
 
 } // end if(artwork-list)
 
@@ -438,4 +467,23 @@ function escHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+// ── Support-Suche ─────────────────────────────────────────────────
+const supportSearchBtn = document.getElementById("support-search-btn");
+const supportSearchInput = document.getElementById("support-search");
+
+if (supportSearchBtn) {
+  function goToSearch() {
+    const q = supportSearchInput.value.trim();
+    if (q) {
+      window.location.href = `/index.html?q=${encodeURIComponent(q)}`;
+    } else {
+      window.location.href = "/index.html";
+    }
+  }
+  supportSearchBtn.addEventListener("click", goToSearch);
+  supportSearchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") goToSearch();
+  });
 }

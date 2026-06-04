@@ -10,14 +10,14 @@
     <header class="header">
 <div class="logo-wrapper">
   <div class="logo" id="logo-lottie"></div>
-  <a class="logo-hitbox" href="/index.html"></a>
+  <a class="logo-hitbox" href="https://artsee.tureeno.com"></a>
 </div>
     </header>
 
     <main>
       <!-- Search row -->
-      <div class="search-row">
-        <div class="search-container">
+<div class="search-row">
+  <div class="search-container">
           <input
             class="search-input"
             type="text"
@@ -42,6 +42,8 @@
           </button>
         </div>
 
+        <div class="search-controls">
+
         <!-- Filter toggle button -->
         <button
           class="filter-toggle-btn"
@@ -63,6 +65,7 @@
             <line x1="8" y1="12" x2="16" y2="12" />
             <line x1="11" y1="18" x2="13" y2="18" />
           </svg>
+
           Filters
           <span class="filter-badge" hidden>0</span>
           <svg
@@ -101,7 +104,21 @@
 </svg>
           Favorites
         </button>
-      </div>
+
+        <div class="view-toggle">
+  <button class="view-btn active" id="view-list" aria-label="List view">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  </button>
+  <button class="view-btn" id="view-grid" aria-label="Grid view">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+    </svg>
+  </button>
+</div>
+</div>
+</div>
 
       <!-- Filter panel -->
       <div
@@ -118,7 +135,7 @@
             >
             <div class="select-wrapper">
               <select class="filter-select" id="filter-department">
-                <!-- populated by JS -->
+                
               </select>
               <svg
                 class="select-arrow"
@@ -258,11 +275,11 @@
         <p>Made with Love by Anselm and Jérôme</p>
         <p>For your artsy best friend, thiefs and everyone else.</p>
         <div class="footer-links">
-          <a href="/mission.html">Our Mission</a>
-          <a href="/support.html">Support & FAQ</a>
+          <a href="/mission">Our Mission</a>
+          <a href="/faq">FAQ</a>
         </div>
         <div class="footer-contact">
-          <p>Contact</p>
+          <p><b>Adress</b></p>
           <p>Holzikofenweg 8</p>
           <p>3007 Bern</p>
           <p>Switzerland</p>
