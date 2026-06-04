@@ -29,7 +29,7 @@ document.querySelectorAll(".accordion").forEach(btn => {
   });
 });
 
-// ── Hauptseiten-Code (nur wenn Artwork-Liste vorhanden) ───────────
+// ── Hauptseiten-Code  ───────────
 if (document.getElementById("artwork-list")) {
 
   // ── Konstanten ──────────────────────────────────────────────────

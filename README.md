@@ -25,10 +25,11 @@ Die grössten Herausforderungen lagen im Umgang mit der ARTIC-API: Nicht alle We
 ## Ressourcen
 - [Art Institute of Chicago API](https://api.artic.edu/docs/)
 - [Claude](https://claude.ai/)
-– Web-Vorlagen einzelner Figma-Komponenten
+- Web-Vorlagen einzelner Figma-Komponenten
 - IM-Dozenten
 
 
 ## Zusätzliches
 Stay hydrated :D
+
 PLZZ give us a 6+ :)))
