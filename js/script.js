@@ -11,7 +11,7 @@ document.getElementById("logo-lottie").addEventListener("mouseenter", () => {
   animation.goToAndPlay(0);
 });
 
-// ── Accordion (läuft auf allen Seiten) ────────────────────────────
+// ── Accordion  ────────────────────────────
 document.querySelectorAll(".accordion").forEach(btn => {
   btn.addEventListener("click", function () {
     const panel = this.nextElementSibling;

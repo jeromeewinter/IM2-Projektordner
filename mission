@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Artsee</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+<script src="/js/script.js" defer></script>
   </head>
   <body>
     <header class="header">
@@ -69,7 +71,6 @@ By combining technology, discovery, and cultural knowledge, we aim to become the
       </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-    <script src="/js/script.js"></script>
+   
   </body>
 </html>
